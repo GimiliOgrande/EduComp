@@ -1,0 +1,25 @@
+# Compiled class files
+**/target/
+**/*.class
+
+# Log files
+*.log
+**/logs/
+
+# Package files
+**/node_modules/
+**/dist/
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment files
+.env
+.env.*
+!.env.example
