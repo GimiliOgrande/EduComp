@@ -1098,7 +1098,108 @@ export const getAulaById = (id: number): AulaData | undefined => {
   for (const serie of mockCurso.series) {
     for (const modulo of serie.modulos) {
       const aula = modulo.aulas.find(a => a.id === id);
-      if (aula) return aula;
+      if (aula) {
+        // Se a aula não tiver slides ou quiz definidos, povoamos de forma mockada dinâmica
+        if (!aula.slides || aula.slides.length === 0) {
+          aula.slides = [
+            {
+              id: id * 10 + 1,
+              titulo: "Apresentação & Objetivos",
+              conteudo: `Bem-vindos à aula de hoje: **${aula.titulo}**.\n\nNesta etapa, vamos explorar como esta aula se conecta com o nosso cotidiano e quais as metas de aprendizado que alcançaremos juntos.`,
+              ordem: 1,
+              objetivo: "Introduzir a temática geral e motivar o engajamento inicial da turma.",
+              tempoEstimado: 5
+            },
+            {
+              id: id * 10 + 2,
+              titulo: "Desafio Quebra-Gelo!",
+              conteudo: `Vamos começar com um desafio rápido de raciocínio relacionado a **${aula.titulo}**. \n\nObserve o cenário proposto pelo professor e discuta com seus colegas em duplas.`,
+              ordem: 2,
+              objetivo: "Despertar a curiosidade e ativar conhecimentos prévios de forma lúdica.",
+              tempoEstimado: 5
+            },
+            {
+              id: id * 10 + 3,
+              titulo: "Compreendendo o Conceito",
+              conteudo: `Aqui está a essência de **${aula.titulo}**:\n\n${aula.descricao}\n\nPara facilitar, pense na analogia do cotidiano que o professor irá explicar.`,
+              ordem: 3,
+              objetivo: "Apresentar a teoria e os conceitos técnicos de forma clara e acessível.",
+              tempoEstimado: 10
+            },
+            {
+              id: id * 10 + 4,
+              titulo: "Mão na Massa: Atividade Prática",
+              conteudo: "Agora é com vocês! Em grupos de 3 a 5 alunos, vamos realizar uma atividade desplugada utilizando papel e caneta.\n\nSiga as instruções e colabore com seu time para construir a solução do desafio proposto.",
+              ordem: 4,
+              objetivo: "Aplicar o conhecimento adquirido em um desafio cooperativo prático e desplugado.",
+              tempoEstimado: 10
+            },
+            {
+              id: id * 10 + 5,
+              titulo: "Fechamento & Reflexão Social",
+              conteudo: `O que aprendemos hoje sobre **${aula.titulo}**?\n\n* A tecnologia não é neutra: ela afeta a sociedade, o meio ambiente e as nossas vidas.\n* Compreender o mundo digital nos torna cidadãos mais críticos e preparados para o futuro.`,
+              ordem: 5,
+              objetivo: "Consolidar o aprendizado e estimular a consciência social e ética.",
+              tempoEstimado: 5
+            }
+          ];
+        }
+
+        if (!aula.quiz) {
+          aula.quiz = {
+            id: id * 100,
+            titulo: `Quiz de Fixação: ${aula.titulo}`,
+            perguntas: [
+              {
+                id: id * 1000 + 1,
+                enunciado: `Sobre a aula de hoje ('${aula.titulo}'), qual alternativa descreve corretamente o seu objetivo principal?`,
+                ordem: 1,
+                alternativas: [
+                  { id: id * 10000 + 1, texto: `Compreender e aplicar os conceitos práticos de ${aula.titulo} no nosso cotidiano digital.`, correta: true, ordem: 1 },
+                  { id: id * 10000 + 2, texto: "Decorar códigos complexos em inglês para criar novos sistemas operacionais.", correta: false, ordem: 2 },
+                  { id: id * 10000 + 3, texto: "Aprender a formatar o celular e instalar antivírus pirateados no computador.", correta: false, ordem: 3 },
+                  { id: id * 10000 + 4, texto: "Apenas navegar em redes sociais e assistir vídeos sem propósitos educativos.", correta: false, ordem: 4 }
+                ]
+              },
+              {
+                id: id * 1000 + 2,
+                enunciado: `Por que a temática abordada em '${aula.titulo}' é importante para os estudantes do Ensino Médio?`,
+                ordem: 2,
+                alternativas: [
+                  { id: id * 10000 + 5, texto: "Porque nos ajuda a desenvolver pensamento crítico e lógico para resolver problemas complexos da sociedade.", correta: true, ordem: 1 },
+                  { id: id * 10000 + 6, texto: "Porque é necessário para poder jogar videogame durante as aulas escolares.", correta: false, ordem: 2 },
+                  { id: id * 10000 + 7, texto: "Porque o computador faz tudo sozinho e não precisamos pensar ao usá-lo.", correta: false, ordem: 3 },
+                  { id: id * 10000 + 8, texto: "Porque apenas cientistas renomados devem entender de tecnologia.", correta: false, ordem: 4 }
+                ]
+              },
+              {
+                id: id * 1000 + 3,
+                enunciado: `Ao falar de '${aula.titulo}', qual é um erro ou mito conceitual comum que devemos evitar?`,
+                ordem: 3,
+                alternativas: [
+                  { id: id * 10000 + 9, texto: "Acreditar que tecnologia é mágica ou que não exige planejamento e ética humana.", correta: true, ordem: 1 },
+                  { id: id * 10000 + 10, texto: "Saber que computadores usam código binário para processar dados de energia.", correta: false, ordem: 2 },
+                  { id: id * 10000 + 11, texto: "Reconhecer que hardware e software dependem um do outro para funcionar.", correta: false, ordem: 3 },
+                  { id: id * 10000 + 12, texto: "Entender que algoritmos são instruções sequenciais passo a passo.", correta: false, ordem: 4 }
+                ]
+              },
+              {
+                id: id * 1000 + 4,
+                enunciado: `Qual a melhor postura ética ao aplicar as noções de '${aula.titulo}' nas redes sociais?`,
+                ordem: 4,
+                alternativas: [
+                  { id: id * 10000 + 13, texto: "Respeitar a autoria das produções, proteger dados privados e combater notícias falsas.", correta: true, ordem: 1 },
+                  { id: id * 10000 + 14, texto: "Compartilhar links suspeitos sem verificar a veracidade da fonte.", correta: false, ordem: 2 },
+                  { id: id * 10000 + 15, texto: "Utilizar a mesma senha fraca em todas as plataformas para não esquecer.", correta: false, ordem: 3 },
+                  { id: id * 10000 + 16, texto: "Copiar textos de sites alheios sem citar os autores (plágio).", correta: false, ordem: 4 }
+                ]
+              }
+            ]
+          };
+        }
+
+        return aula;
+      }
     }
   }
   return undefined;
