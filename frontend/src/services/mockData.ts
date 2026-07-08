@@ -1101,48 +1101,322 @@ export const getAulaById = (id: number): AulaData | undefined => {
       if (aula) {
         // Se a aula não tiver slides ou quiz definidos, povoamos de forma mockada dinâmica
         if (!aula.slides || aula.slides.length === 0) {
-          aula.slides = [
-            {
-              id: id * 10 + 1,
-              titulo: "Apresentação & Objetivos",
-              conteudo: `Bem-vindos à aula de hoje: **${aula.titulo}**.\n\nNesta etapa, vamos explorar como esta aula se conecta com o nosso cotidiano e quais as metas de aprendizado que alcançaremos juntos.`,
-              ordem: 1,
-              objetivo: "Introduzir a temática geral e motivar o engajamento inicial da turma.",
-              tempoEstimado: 5
-            },
-            {
-              id: id * 10 + 2,
-              titulo: "Desafio Quebra-Gelo!",
-              conteudo: `Vamos começar com um desafio rápido de raciocínio relacionado a **${aula.titulo}**. \n\nObserve o cenário proposto pelo professor e discuta com seus colegas em duplas.`,
-              ordem: 2,
-              objetivo: "Despertar a curiosidade e ativar conhecimentos prévios de forma lúdica.",
-              tempoEstimado: 5
-            },
-            {
-              id: id * 10 + 3,
-              titulo: "Compreendendo o Conceito",
-              conteudo: `Aqui está a essência de **${aula.titulo}**:\n\n${aula.descricao}\n\nPara facilitar, pense na analogia do cotidiano que o professor irá explicar.`,
-              ordem: 3,
-              objetivo: "Apresentar a teoria e os conceitos técnicos de forma clara e acessível.",
-              tempoEstimado: 10
-            },
-            {
-              id: id * 10 + 4,
-              titulo: "Mão na Massa: Atividade Prática",
-              conteudo: "Agora é com vocês! Em grupos de 3 a 5 alunos, vamos realizar uma atividade desplugada utilizando papel e caneta.\n\nSiga as instruções e colabore com seu time para construir a solução do desafio proposto.",
-              ordem: 4,
-              objetivo: "Aplicar o conhecimento adquirido em um desafio cooperativo prático e desplugado.",
-              tempoEstimado: 10
-            },
-            {
-              id: id * 10 + 5,
-              titulo: "Fechamento & Reflexão Social",
-              conteudo: `O que aprendemos hoje sobre **${aula.titulo}**?\n\n* A tecnologia não é neutra: ela afeta a sociedade, o meio ambiente e as nossas vidas.\n* Compreender o mundo digital nos torna cidadãos mais críticos e preparados para o futuro.`,
-              ordem: 5,
-              objetivo: "Consolidar o aprendizado e estimular a consciência social e ética.",
-              tempoEstimado: 5
-            }
-          ];
+          if (id === 101) {
+            aula.slides = [
+              {
+                id: 1011,
+                titulo: "Bem-vindo ao EduComp!",
+                conteudo: "Hoje iniciaremos nossa jornada pelo fascinante mundo da Computação!\n\n**Pergunta rápida para aquecer:** O que vem à sua mente quando você escuta a palavra 'Computação'? \n\nSerá que é apenas mexer no celular, usar redes sociais ou jogar videogame? Vamos descobrir que existe um universo invisível e incrível por trás das telas!",
+                ordem: 1,
+                objetivo: "Acolher a turma e problematizar a diferença entre usar tecnologia e entender a computação.",
+                tempoEstimado: 5
+              },
+              {
+                id: 1012,
+                titulo: "O que significa 'Computar'?",
+                conteudo: "A palavra **computar** vem do latim e significa simplesmente **calcular**, **contar** ou **avaliar**.\n\nAntigamente, antes de existirem as máquinas elétricas, 'computadores' eram **pessoas** contratadas para passar o dia inteiro fazendo cálculos matemáticos complexos no papel! \n\nHoje, o computador físico faz isso em bilionésimos de segundo.",
+                ordem: 2,
+                objetivo: "Apresentar a etimologia da palavra computar e o contexto histórico da computação.",
+                tempoEstimado: 5
+              },
+              {
+                id: 1013,
+                titulo: "Dados vs. Informação",
+                conteudo: "Existe uma grande diferença entre esses dois conceitos:\n\n- **Dados**: São elementos soltos, brutos e sem significado próprio. Exemplo: O número '38'.\n- **Informação**: É quando organizamos e damos contexto a esses dados. Exemplo: 'A temperatura atual é de 38°C'. \n\nA Computação é a ciência que estuda como transformar dados brutos em informações úteis automaticamente.",
+                ordem: 3,
+                objetivo: "Ensinar a diferença crucial entre dados e informações no processamento computacional.",
+                tempoEstimado: 5
+              },
+              {
+                id: 1014,
+                titulo: "Os Três Passos Mágicos",
+                conteudo: "Toda e qualquer tarefa realizada por um sistema de computação segue rigorosamente estes três passos:\n\n1. **Entrada (Input)**: Os dados entram no sistema (ex: você digita uma letra no teclado).\n2. **Processamento**: O computador faz os cálculos e processa a ação.\n3. **Saída (Output)**: O resultado é exibido (ex: a letra aparece na tela).",
+                ordem: 4,
+                objetivo: "Apresentar o ciclo básico de processamento de dados (entrada, processamento e saída).",
+                tempoEstimado: 5
+              },
+              {
+                id: 1015,
+                titulo: "A Analogia da Cozinha",
+                conteudo: "Pense no ciclo de processamento como a receita de um bolo:\n\n- **Entrada**: Os ingredientes brutos (farinha, ovos, açúcar) que você coloca na mesa.\n- **Processamento**: O ato de misturar os ingredientes e assar no forno seguindo a receita.\n- **Saída**: O bolo quentinho pronto para comer!\n\nNa computação, a 'receita' que o cozinheiro segue é o que chamamos de **programa** ou **algoritmo**.",
+                ordem: 5,
+                objetivo: "Fixar o ciclo de processamento usando uma analogia cotidiana memorável.",
+                tempoEstimado: 5
+              },
+              {
+                id: 1016,
+                titulo: "Hardware vs. Software",
+                conteudo: "Todo sistema computacional é dividido em duas partes fundamentais:\n\n- **Hardware**: É a parte física que você consegue tocar. As placas, fios, tela, carcaça e botões.\n- **Software**: É a parte lógica que você não toca, mas interage. São os programas, sistemas e aplicativos (como o Instagram, jogos ou o Windows).\n\n**O hardware é o corpo; o software é a mente.**",
+                ordem: 6,
+                objetivo: "Diferenciar hardware de software e explicar a interdependência entre eles.",
+                tempoEstimado: 5
+              },
+              {
+                id: 1017,
+                titulo: "O que NÃO é Computação?",
+                conteudo: "Vamos desmistificar algumas coisas!\nA Ciência da Computação **NÃO** se resume a:\n\n- Saber consertar computadores ou formatar celulares.\n- Ser bom em jogos de computador ou passar o dia em redes sociais.\n- Apenas escrever linhas de código (isso é programação, que é só uma ferramenta).\n\nComputação é a ciência sobre **resolver problemas humanos usando a lógica e a tecnologia**.",
+                ordem: 7,
+                objetivo: "Desmistificar estereótipos comuns da área e ampliar a visão sobre a Ciência da Computação.",
+                tempoEstimado: 5
+              },
+              {
+                id: 1018,
+                titulo: "O que é um Algoritmo?",
+                conteudo: "Um **algoritmo** é apenas uma **sequência de instruções passo a passo, claras e sem ambiguidades**, criada para resolver um problema ou realizar uma tarefa.\n\n**Algoritmos do dia a dia:**\n- A receita de bolo.\n- As instruções para montar um móvel.\n- O trajeto que você faz para vir à escola.\n\nSe os passos forem seguidos na ordem correta, o problema será resolvido com sucesso.",
+                ordem: 8,
+                objetivo: "Definir algoritmo de forma simplificada e relacioná-lo com ações do cotidiano.",
+                tempoEstimado: 5
+              },
+              {
+                id: 1019,
+                titulo: "Desafio do Robô (Mão na Massa)",
+                conteudo: "Vamos fazer um jogo rápido na sala!\n\nImagine que o professor é um **robô burro** que não sabe fazer nada sozinho, mas entende ordens exatas.\n\n**O desafio:** Em duplas, escrevam no papel um algoritmo detalhado para fazer o robô **'pegar uma caneta da mesa e guardá-la no bolso'**.\n\n*Regra:* O robô segue os passos de forma literal. Se faltar um passo (ex: 'abrir a mão'), o robô falhará!",
+                ordem: 9,
+                objetivo: "Experimentar a lógica algorítmica e a clareza de instruções de forma prática e desplugada.",
+                tempoEstimado: 10
+              },
+              {
+                id: 10110,
+                titulo: "Consumidor vs. Criador",
+                conteudo: "Para fechar nossa aula de hoje:\n\nQuando você usa um aplicativo ou joga videogame, você é um **consumidor** da computação.\n\nAo aprender a ciência da Computação, você se torna capaz de **criar** novas soluções, jogos, aplicativos e ferramentas para ajudar as pessoas.\n\nA computação é a nova linguagem do mundo. **E vocês estão aqui para aprender a falar essa linguagem!**",
+                ordem: 10,
+                objetivo: "Concluir a aula estimulando o protagonismo digital e a consciência social da turma.",
+                tempoEstimado: 5
+              }
+            ];
+          } else if (id === 102) {
+            aula.slides = [
+              {
+                id: 1021,
+                titulo: "A Jornada Através do Tempo",
+                conteudo: "Hoje vamos embarcar em uma máquina do tempo da história humana!\n\n**O desafio:** Como você faria para somar números grandes ou organizar contas se não existisse nenhuma calculadora ou celular? \n\nA história da computação é a história de como a humanidade inventou ferramentas para ajudar a nossa mente a calcular coisas cada vez mais rápidas.",
+                ordem: 1,
+                objetivo: "Despertar a curiosidade e introduzir a linha temporal da evolução tecnológica.",
+                tempoEstimado: 5
+              },
+              {
+                id: 1022,
+                titulo: "O Ábaco: A Origem de Tudo",
+                conteudo: "Inventado há mais de 4.000 anos na Mesopotâmia, o **Ábaco** é considerado a primeira calculadora da humanidade.\n\n- Ele usa pequenas contas de madeira que deslizam em hastes paralelas.\n- Cada haste representa unidades, dezenas ou centenas.\n\nO princípio de usar posições físicas para somar números ainda é a base de como os microchips processam dados hoje!",
+                ordem: 2,
+                objetivo: "Conceituar o funcionamento do ábaco e sua relevância lógica na representação posicional numérica.",
+                tempoEstimado: 5
+              },
+              {
+                id: 1023,
+                titulo: "As Máquinas de Engrenagens",
+                conteudo: "Durante o Renascimento, inventores criaram máquinas de calcular mecânicas:\n\n- **Pascalina (Blaise Pascal, 1642)**: Usava engrenagens metálicas dentadas (como relógios) para somar e subtrair automaticamente ao girar manivelas.\n- **Calculadora de Leibniz (1671)**: Aperfeiçoou a máquina para também multiplicar e dividir.\n\nA matemática saía do papel e virava engrenagem física!",
+                ordem: 3,
+                objetivo: "Apresentar as primeiras tentativas mecânicas de automatizar operações aritméticas.",
+                tempoEstimado: 5
+              },
+              {
+                id: 1024,
+                titulo: "Babbage e Ada: O Sonho do Motor Analítico",
+                conteudo: "No século XIX, o matemático **Charles Babbage** projetou a Máquina Analítica, um computador mecânico gigante com memória e leitor de cartões de papel.\n\nA matemática **Ada Lovelace** percebeu o potencial da máquina e escreveu a primeira sequência de instruções lógicas para ela funcionar.\n\nPor isso, **Ada Lovelace é reconhecida como a primeira programadora da história!**",
+                ordem: 4,
+                objetivo: "Apresentar a Máquina Analítica e destacar o pioneirismo histórico de Ada Lovelace no software.",
+                tempoEstimado: 5
+              },
+              {
+                id: 1025,
+                titulo: "O Nascimento dos Gigantes: O ENIAC",
+                conteudo: "Em 1946, surgiu o **ENIAC**, um dos primeiros computadores totalmente eletrônicos do mundo:\n\n- Ocupava uma sala gigante de 180 metros quadrados (o tamanho de uma casa grande!).\n- Pesava 30 toneladas e continha mais de 17.000 válvulas de vidro quentes.\n- Para ser programado, era necessário conectar cabos físicos em painéis imensos.\n\nEra lento para os padrões de hoje, mas processava em segundos o que humanos levariam semanas.",
+                ordem: 5,
+                objetivo: "Compreender a escala física e a complexidade operacional dos primeiros computadores a válvula.",
+                tempoEstimado: 5
+              },
+              {
+                id: 1026,
+                titulo: "Grace Hopper e a Linguagem de Programação",
+                conteudo: "Nos anos 50, a cientista **Grace Hopper** revolucionou a computação:\n\n- Criou o primeiro **compilador** (um software que traduz comandos escritos em palavras humanas como 'ADD' ou 'SUB' para a linguagem elétrica binária do computador).\n- Graças a ela, programar ficou muito mais acessível.\n- Popularizou o termo **'bug'** para falhas de sistema.\n\n**Grace Hopper é considerada uma das maiores heroínas do software!**",
+                ordem: 6,
+                objetivo: "Apresentar o conceito de compilador e homenagear as contribuições cruciais de Grace Hopper.",
+                tempoEstimado: 5
+              },
+              {
+                id: 1027,
+                titulo: "O Milagre do Silício: Os Transistores",
+                conteudo: "A grande virada na tecnologia ocorreu com a invenção do **Transistor** e, depois, do **Circuito Integrado (Chip)**:\n\n- Eles substituíram as válvulas gigantescas de vidro por minúsculos interruptores em chips de silício.\n- Os computadores passaram de gigantescos trambolhos a caixas que cabiam em cima de mesas.\n- Reduziram drasticamente o consumo de energia e o calor gerado.",
+                ordem: 7,
+                objetivo: "Explicar como o transistor permitiu a miniaturização dos computadores.",
+                tempoEstimado: 5
+              },
+              {
+                id: 1028,
+                titulo: "Os Computadores Pessoais (PCs)",
+                conteudo: "Nos anos 70 e 80, os computadores deixaram de ser exclusivos de governos e universidades e entraram nas casas das pessoas:\n\n- **Steve Jobs e Steve Wozniak**: Criaram o Apple I e Apple II em uma garagem de carros.\n- **IBM PC**: Popularizou o computador em escritórios do mundo inteiro.\n- Surgiram as interfaces visuais com mouses e ícones coloridos, tornando a tecnologia amigável para qualquer cidadão comum.",
+                ordem: 8,
+                objetivo: "Compreender a popularização dos computadores domésticos nos anos 70 e 80.",
+                tempoEstimado: 5
+              },
+              {
+                id: 1029,
+                titulo: "Supercomputadores e Celulares de Bolso",
+                conteudo: "Hoje a computação se dividiu em dois extremos incríveis:\n\n- **Supercomputadores**: Ocupam salas inteiras e realizam previsões do tempo mundiais, simulações espaciais e pesquisas de novos remédios.\n- **Smartphones**: Computadores de bolso que carregamos conosco todos os dias.\n\n**Comparação surpreendente:** O celular no seu bolso tem milhões de vezes mais poder de cálculo do que todos os computadores que levaram o homem à Lua juntos em 1969!",
+                ordem: 9,
+                objetivo: "Comparar o poder de processamento atual com as décadas anteriores.",
+                tempoEstimado: 5
+              },
+              {
+                id: 10210,
+                titulo: "E como será o Futuro?",
+                conteudo: "Ao olhar para trás, vemos que a história da computação não para de acelerar:\n\n- Computadores quânticos prometem resolver em minutos problemas que levariam milhares de anos.\n- Inteligências Artificiais estão mudando a forma como aprendemos e trabalhamos.\n\n**O futuro pertence a quem entende essa evolução e usa a tecnologia com ética e responsabilidade para mudar a sociedade!**",
+                ordem: 10,
+                objetivo: "Concluir a aula provocando reflexões críticas e éticas sobre os rumos futuros da computação.",
+                tempoEstimado: 5
+              }
+            ];
+          } else if (id === 103) {
+            aula.slides = [
+              {
+                id: 1031,
+                titulo: "O Mundo dos Interruptores",
+                conteudo: "Computadores são feitos de eletricidade. Eles não sabem o que são letras ou cores de verdade. Eles entendem apenas dois estados físicos:\n- **Ligado** (energia passando) = representado pelo número **1**.\n- **Desligado** (sem energia) = representado pelo número **0**.",
+                ordem: 1,
+                objetivo: "Compreender o conceito físico de código binário a partir de interruptores elétricos.",
+                tempoEstimado: 10
+              },
+              {
+                id: 1032,
+                titulo: "O que é Bit e Byte?",
+                conteudo: "- **Bit**: É a menor unidade de informação (um único 0 ou 1).\n- **Byte**: É um grupo de 8 bits juntos (ex: `01000001` representa a letra 'A').\nCada caractere digitado consome exatamente 1 byte de memória.",
+                ordem: 2,
+                objetivo: "Diferenciar bit e byte e entender a formação de caracteres por agrupamento de estados binários.",
+                tempoEstimado: 10
+              }
+            ];
+          } else if (id === 104) {
+            aula.slides = [
+              {
+                id: 1041,
+                titulo: "Os Segmentos da Computação",
+                conteudo: "A computação não se resume a apenas programar sites. Ela é dividida em grandes áreas:\n- **Hardware**: Criação de componentes físicos e circuitos.\n- **Software**: Desenvolvimento de sistemas operacionais e aplicativos.\n- **Redes**: Comunicação de dados entre computadores.\n- **Segurança**: Proteção de sistemas contra ataques digitais.\n- **Inteligência Artificial**: Algoritmos de aprendizado automático.",
+                ordem: 1,
+                objetivo: "Mapear as principais divisões científicas e mercadológicas da Computação.",
+                tempoEstimado: 10
+              },
+              {
+                id: 1042,
+                titulo: "Profissões do Futuro",
+                conteudo: "Quem trabalha com computação possui diferentes funções:\n- **Engenheiro de Software**: Desenha e planeja grandes sistemas.\n- **Analista de Segurança**: Protege dados e investiga invasões.\n- **Designer de Interações (UX/UI)**: Garante que os aplicativos sejam fáceis e bonitos de usar.\n- **Cientista de Dados**: Analisa informações para tomar decisões de negócios.",
+                ordem: 2,
+                objetivo: "Conhecer a variedade de carreiras no mercado de tecnologia da informação.",
+                tempoEstimado: 15
+              }
+            ];
+          } else if (id === 105) {
+            aula.slides = [
+              {
+                id: 1051,
+                titulo: "Corpo e Mente do Computador",
+                conteudo: "- **Hardware**: A parte física que você chuta (placas, cabos, carcaça).\n- **Software**: A parte lógica que você xinga quando trava (programas, sistemas, aplicativos).\nEles são interdependentes: a mente precisa do corpo para agir, e o corpo precisa da mente para ter utilidade.",
+                ordem: 1,
+                objetivo: "Diferenciar a infraestrutura física da lógica em dispositivos eletrônicos.",
+                tempoEstimado: 10
+              },
+              {
+                id: 1052,
+                titulo: "O Ciclo do Processamento",
+                conteudo: "Toda ação computacional segue três etapas obrigatórias:\n1. **Entrada**: Dados inseridos no sistema (digitação, clique, voz).\n2. **Processamento**: O cálculo realizado pelo processador (CPU).\n3. **Saída**: O resultado visualizado pelo usuário (imagem na tela, som).",
+                ordem: 2,
+                objetivo: "Compreender o fluxo de informações dentro do ciclo básico de computação.",
+                tempoEstimado: 15
+              }
+            ];
+          } else if (id === 201) {
+            aula.slides = [
+              {
+                id: 2011,
+                titulo: "A Placa-Mãe e as Estradas de Dados",
+                conteudo: "A **Placa-Mãe** é o sistema circulatório do computador. Ela conecta fisicamente o processador, as memórias e todos os periféricos através de trilhas de cobre chamadas de **Barramentos**, que transportam pulsos elétricos.",
+                ordem: 1,
+                objetivo: "Identificar a placa-mãe como o núcleo de conexões elétricas e tráfego de dados de um computador.",
+                tempoEstimado: 15
+              }
+            ];
+          } else if (id === 209) {
+            aula.slides = [
+              {
+                id: 2091,
+                titulo: "O que é Pensamento Computacional?",
+                conteudo: "Não é pensar como um computador, mas aprender a usar o raciocínio lógico estruturado para resolver problemas complexos das nossas vidas. Ele possui 4 pilares:\n1. **Decomposição**\n2. **Reconhecimento de Padrões**\n3. **Abstração**\n4. **Algoritmos**",
+                ordem: 1,
+                objetivo: "Conceituar o Pensamento Computacional como ferramenta humana de resolução de problemas.",
+                tempoEstimado: 10
+              },
+              {
+                id: 2092,
+                titulo: "Pilar 1: Decomposição",
+                conteudo: "**Decomposição** é a arte de quebrar um grande problema em pequenas partes menores, focando em resolver uma de cada vez. Problemas menores são muito mais simples de solucionar.",
+                ordem: 2,
+                objetivo: "Aplicar a técnica de decomposição na divisão de problemas complexos.",
+                tempoEstimado: 15
+              }
+            ];
+          } else if (id === 301) {
+            aula.slides = [
+              {
+                id: 3011,
+                titulo: "O Despertar da Inteligência Artificial",
+                conteudo: "A Inteligência Artificial (IA) busca fazer com que sistemas computacionais consigam simular comportamentos inteligentes de humanos, como aprender, raciocinar e reconhecer padrões de linguagem.",
+                ordem: 1,
+                objetivo: "Introduzir a definição científica de Inteligência Artificial.",
+                tempoEstimado: 10
+              },
+              {
+                id: 3012,
+                titulo: "O Teste de Turing",
+                conteudo: "Proposto por Alan Turing em 1950, o teste avalia se uma máquina consegue conversar por texto com um humano sem que este perceba que está falando com um computador. Se o humano não conseguir diferenciar, a máquina passou no teste.",
+                ordem: 2,
+                objetivo: "Compreender a primeira metodologia histórica de avaliação de inteligência de máquinas.",
+                tempoEstimado: 15
+              }
+            ];
+          } else {
+            aula.slides = [
+              {
+                id: id * 10 + 1,
+                titulo: "Apresentação & Objetivos",
+                conteudo: `Bem-vindos à aula de hoje: **${aula.titulo}**.\n\nNesta etapa, vamos explorar como esta aula se conecta com o nosso cotidiano e quais as metas de aprendizado que alcançaremos juntos.`,
+                ordem: 1,
+                objetivo: "Introduzir a temática geral e motivar o engajamento inicial da turma.",
+                tempoEstimado: 5
+              },
+              {
+                id: id * 10 + 2,
+                titulo: "Desafio Quebra-Gelo!",
+                conteudo: `Vamos começar com um desafio rápido de raciocínio relacionado a **${aula.titulo}**. \n\nObserve o cenário proposto pelo professor e discuta com seus colegas em duplas.`,
+                ordem: 2,
+                objetivo: "Despertar a curiosidade e ativar conhecimentos prévios de forma lúdica.",
+                tempoEstimado: 5
+              },
+              {
+                id: id * 10 + 3,
+                titulo: "Compreendendo o Conceito",
+                conteudo: `Aqui está a essência de **${aula.titulo}**:\n\n${aula.descricao}\n\nPara facilitar, pense na analogia do cotidiano que o professor irá explicar.`,
+                ordem: 3,
+                objetivo: "Apresentar a teoria e os conceitos técnicos de forma clara e acessível.",
+                tempoEstimado: 10
+              },
+              {
+                id: id * 10 + 4,
+                titulo: "Mão na Massa: Atividade Prática",
+                conteudo: "Agora é com vocês! Em grupos de 3 a 5 alunos, vamos realizar uma atividade desplugada utilizando papel e caneta.\n\nSiga as instruções e colabore com seu time para construir a solução do desafio proposto.",
+                ordem: 4,
+                objetivo: "Aplicar o conhecimento adquirido em um desafio cooperativo prático e desplugado.",
+                tempoEstimado: 10
+              },
+              {
+                id: id * 10 + 5,
+                titulo: "Fechamento & Reflexão Social",
+                conteudo: `O que aprendemos hoje sobre **${aula.titulo}**?\n\n* A tecnologia não é neutra: ela afeta a sociedade, o meio ambiente e as nossas vidas.\n* Compreender o mundo digital nos torna cidadãos mais críticos e preparados para o futuro.`,
+                ordem: 5,
+                objetivo: "Consolidar o aprendizado e estimular a consciência social e ética.",
+                tempoEstimado: 5
+              }
+            ];
+          }
         }
 
         if (!aula.quiz) {
@@ -1156,7 +1430,7 @@ export const getAulaById = (id: number): AulaData | undefined => {
                 ordem: 1,
                 alternativas: [
                   { id: id * 10000 + 1, texto: `Compreender e aplicar os conceitos práticos de ${aula.titulo} no nosso cotidiano digital.`, correta: true, ordem: 1 },
-                  { id: id * 10000 + 2, texto: "Decorar códigos complexos em inglês para criar novos sistemas operacionais.", correta: false, ordem: 2 },
+                  { id: id * 10000 + 2, texto: "Decorar códigos complexos in inglês para criar novos sistemas operacionais.", correta: false, ordem: 2 },
                   { id: id * 10000 + 3, texto: "Aprender a formatar o celular e instalar antivírus pirateados no computador.", correta: false, ordem: 3 },
                   { id: id * 10000 + 4, texto: "Apenas navegar em redes sociais e assistir vídeos sem propósitos educativos.", correta: false, ordem: 4 }
                 ]
