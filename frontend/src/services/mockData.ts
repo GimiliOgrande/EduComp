@@ -93,16 +93,7 @@ export const mockCurso: CursoData = {
               duracaoSugerida: '50 minutos',
               competencias: ['Pensamento Científico', 'Cultura Digital'],
               habilidades: ['EM13LGG701'],
-              slides: [
-                {
-                  id: 1001,
-                  titulo: 'Dados vs. Informação',
-                  conteudo: 'Os dados são apenas números, letras ou símbolos soltos no mundo. Quando organizamos e damos sentido a esses dados, eles se transformam em informação útil. A Computação estuda como coletar, organizar e processar esses dados de maneira rápida e automática.',
-                  ordem: 1,
-                  objetivo: 'Diferenciar dados brutos de informação estruturada.',
-                  tempoEstimado: 5
-                }
-              ]
+              slides: []
             },
             {
               id: 102,
