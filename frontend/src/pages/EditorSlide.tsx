@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { getAulaById, saveSlideMock, deleteSlideMock } from '../services/mockData';
@@ -42,19 +42,72 @@ import {
   Psychology,
   Tv,
   PhoneAndroid,
-  HourglassEmpty
+  HourglassEmpty,
+  CloudUpload,
+  Link as LinkIcon,
+  Collections,
+  PhotoCamera,
+  CheckCircle
 } from '@mui/icons-material';
 
 // Galeria de imagens temáticas rápidas para facilitar o professor
 const SUGESTOES_IMAGENS = [
-  { nome: 'Hardware / Chip', url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80' },
-  { nome: 'Placa-Mãe', url: 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=800&q=80' },
-  { nome: 'Processamento', url: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80' },
-  { nome: 'Inteligência Artificial', url: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80' },
-  { nome: 'Internet & Redes', url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80' },
-  { nome: 'Segurança / Cadeado', url: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80' },
-  { nome: 'Programação / Código', url: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80' }
+  { nome: 'Hardware / Chip', categoria: 'Hardware', url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80' },
+  { nome: 'Placa-Mãe & Circuitos', categoria: 'Hardware', url: 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=800&q=80' },
+  { nome: 'Processador / CPU', categoria: 'Hardware', url: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80' },
+  { nome: 'Inteligência Artificial', categoria: 'IA & Dados', url: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80' },
+  { nome: 'Internet & Redes', categoria: 'Redes', url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80' },
+  { nome: 'Segurança / Criptografia', categoria: 'Segurança', url: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80' },
+  { nome: 'Programação & Código', categoria: 'Programação', url: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80' },
+  { nome: 'Servidores & Nuvem', categoria: 'Redes', url: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=800&q=80' },
+  { nome: 'Robótica & Automação', categoria: 'Hardware', url: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80' }
 ];
+
+// Helper para converter e comprimir imagem para Data URL
+const processImageFile = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    if (!file.type.startsWith('image/')) {
+      reject(new Error('O arquivo selecionado não é uma imagem válida.'));
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = document.createElement('img');
+      img.onload = () => {
+        const maxWidth = 1200;
+        const maxHeight = 900;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth || height > maxHeight) {
+          if (width / height > maxWidth / maxHeight) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          } else {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          resolve(dataUrl);
+        } else {
+          resolve(e.target?.result as string);
+        }
+      };
+      img.onerror = () => resolve(e.target?.result as string);
+      img.src = e.target?.result as string;
+    };
+    reader.onerror = () => reject(new Error('Erro ao processar arquivo de imagem.'));
+    reader.readAsDataURL(file);
+  });
+};
 
 const TIPOS_BALAO = [
   { tipo: 'dica', label: '💡 Dica Pedagógica', prefix: '💡 Dica: ' },
@@ -100,6 +153,75 @@ export const EditorSlide: React.FC = () => {
     severity: 'success'
   });
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+
+  // Estados e Refs de Imagem
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [modoImagemTab, setModoImagemTab] = useState(0); // 0 = Upload, 1 = Galeria, 2 = URL
+  const [isDragging, setIsDragging] = useState(false);
+  const [carregandoImagem, setCarregandoImagem] = useState(false);
+  const [categoriaGaleria, setCategoriaGaleria] = useState<string>('Todas');
+
+  const handleFileSelected = async (file: File) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setSnackbar({ open: true, message: 'Selecione um arquivo de imagem válido (PNG, JPG, WebP, SVG).', severity: 'error' });
+      return;
+    }
+    setCarregandoImagem(true);
+    try {
+      const dataUrl = await processImageFile(file);
+      setImagemUrl(dataUrl);
+      setSnackbar({ open: true, message: 'Imagem adicionada com sucesso ao slide!', severity: 'success' });
+    } catch (err: any) {
+      setSnackbar({ open: true, message: err.message || 'Erro ao carregar arquivo de imagem.', severity: 'error' });
+    } finally {
+      setCarregandoImagem(false);
+    }
+  };
+
+  const handleFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      await handleFileSelected(e.target.files[0]);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      await handleFileSelected(e.dataTransfer.files[0]);
+    }
+  };
+
+  // Suporte a Colar Imagem (Ctrl+V) diretamente na tela
+  useEffect(() => {
+    const handlePaste = async (e: ClipboardEvent) => {
+      if (tabEditor !== 0) return;
+      if (e.clipboardData?.files && e.clipboardData.files.length > 0) {
+        const file = e.clipboardData.files[0];
+        if (file.type.startsWith('image/')) {
+          e.preventDefault();
+          await handleFileSelected(file);
+        }
+      }
+    };
+    window.addEventListener('paste', handlePaste);
+    return () => window.removeEventListener('paste', handlePaste);
+  }, [tabEditor]);
 
   // Carregar dados da aula e slides
   useEffect(() => {
@@ -613,53 +735,282 @@ export const EditorSlide: React.FC = () => {
                     )}
                   </Box>
 
-                  {/* SEÇÃO: Imagem do Slide */}
-                  <Box sx={{ p: 2.5, borderRadius: 3, backgroundColor: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(139, 92, 246, 0.2)' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
-                      <Image color="secondary" />
-                      <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                        Imagem do Slide (Opcional)
-                      </Typography>
-                    </Box>
-
-                    <TextField
-                      label="URL da Imagem (Link Web)"
-                      placeholder="https://exemplo.com/imagem.jpg"
-                      value={imagemUrl}
-                      onChange={(e) => setImagemUrl(e.target.value)}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 2 }}
-                    />
-
-                    {/* Sugestões Rápidas de Imagens */}
-                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1, fontWeight: 'bold' }}>
-                      Ou escolha uma imagem temática da computação:
-                    </Typography>
-                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                      {SUGESTOES_IMAGENS.map((sug, idx) => (
-                        <Chip
-                          key={idx}
-                          label={sug.nome}
-                          clickable
-                          variant={imagemUrl === sug.url ? 'filled' : 'outlined'}
-                          color="secondary"
-                          size="small"
-                          onClick={() => setImagemUrl(sug.url)}
-                        />
-                      ))}
+                  {/* SEÇÃO: Imagem do Slide (Upload, Galeria e URL) */}
+                  <Box sx={{ p: 2.5, borderRadius: 3, backgroundColor: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(139, 92, 246, 0.25)' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Image color="secondary" />
+                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                          Imagem do Slide
+                        </Typography>
+                      </Box>
                       {imagemUrl && (
                         <Chip
-                          label="Remover Imagem"
-                          clickable
-                          color="error"
-                          variant="outlined"
+                          icon={<CheckCircle sx={{ fontSize: '16px !important' }} />}
+                          label="Imagem Definida"
+                          color="success"
                           size="small"
-                          onDelete={() => setImagemUrl('')}
-                          onClick={() => setImagemUrl('')}
+                          variant="outlined"
+                          sx={{ fontWeight: 'bold' }}
                         />
                       )}
                     </Box>
+
+                    {/* Preview da Imagem Selecionada (se houver) */}
+                    {imagemUrl && (
+                      <Paper
+                        sx={{
+                          p: 1.5,
+                          mb: 2.5,
+                          borderRadius: 2.5,
+                          backgroundColor: 'rgba(21, 27, 44, 0.9)',
+                          border: '1px solid rgba(6, 182, 212, 0.3)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 2,
+                          flexWrap: 'wrap'
+                        }}
+                      >
+                        <Box
+                          component="img"
+                          src={imagemUrl}
+                          alt="Preview do Slide"
+                          sx={{
+                            width: 100,
+                            height: 70,
+                            borderRadius: 1.5,
+                            objectFit: 'cover',
+                            border: '1px solid rgba(255,255,255,0.1)'
+                          }}
+                        />
+                        <Box sx={{ flex: 1, minWidth: '180px' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                            {imagemUrl.startsWith('data:') ? '📁 Imagem enviada do seu dispositivo' : '🌐 Imagem selecionada'}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', wordBreak: 'break-all' }}>
+                            {imagemUrl.startsWith('data:') ? 'Armazenada diretamente no slide' : imagemUrl.substring(0, 45) + '...'}
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            color="error"
+                            startIcon={<DeleteOutlined fontSize="small" />}
+                            onClick={() => setImagemUrl('')}
+                            sx={{ borderRadius: 2 }}
+                          >
+                            Remover
+                          </Button>
+                        </Box>
+                      </Paper>
+                    )}
+
+                    {/* Input Oculto de Arquivo */}
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileInputChange}
+                      accept="image/*"
+                      style={{ display: 'none' }}
+                    />
+
+                    {/* Sub-abas de Origem da Imagem */}
+                    <Tabs
+                      value={modoImagemTab}
+                      onChange={(_, val) => setModoImagemTab(val)}
+                      textColor="secondary"
+                      indicatorColor="secondary"
+                      variant="fullWidth"
+                      sx={{
+                        minHeight: '38px',
+                        mb: 2,
+                        '& .MuiTab-root': {
+                          minHeight: '38px',
+                          py: 0.5,
+                          fontSize: '0.85rem',
+                          fontWeight: 'bold',
+                          textTransform: 'none'
+                        }
+                      }}
+                    >
+                      <Tab icon={<CloudUpload sx={{ fontSize: 18 }} />} iconPosition="start" label="Fazer Upload" />
+                      <Tab icon={<Collections sx={{ fontSize: 18 }} />} iconPosition="start" label="Galeria Educativa" />
+                      <Tab icon={<LinkIcon sx={{ fontSize: 18 }} />} iconPosition="start" label="Link Web (URL)" />
+                    </Tabs>
+
+                    {/* MODO 1: Upload de Arquivo do Computador / Drag and Drop */}
+                    {modoImagemTab === 0 && (
+                      <Box
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        onClick={() => fileInputRef.current?.click()}
+                        sx={{
+                          p: 3,
+                          borderRadius: 2.5,
+                          border: '2px dashed',
+                          borderColor: isDragging ? 'primary.main' : 'rgba(139, 92, 246, 0.4)',
+                          backgroundColor: isDragging ? 'rgba(6, 182, 212, 0.12)' : 'rgba(15, 23, 42, 0.5)',
+                          textAlign: 'center',
+                          cursor: 'pointer',
+                          transition: 'all 0.25s ease',
+                          '&:hover': {
+                            borderColor: 'primary.light',
+                            backgroundColor: 'rgba(6, 182, 212, 0.08)'
+                          }
+                        }}
+                      >
+                        {carregandoImagem ? (
+                          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1.5, py: 2 }}>
+                            <CircularProgress size={32} color="primary" />
+                            <Typography variant="body2">Processando imagem...</Typography>
+                          </Box>
+                        ) : (
+                          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+                            <Box
+                              sx={{
+                                width: 50,
+                                height: 50,
+                                borderRadius: '50%',
+                                backgroundColor: 'rgba(139, 92, 246, 0.15)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                mb: 0.5
+                              }}
+                            >
+                              <PhotoCamera color="secondary" sx={{ fontSize: 28 }} />
+                            </Box>
+                            <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                              Clique para escolher uma imagem ou arraste até aqui
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              PNG, JPG, JPEG, WebP ou cole com <strong>Ctrl+V</strong>
+                            </Typography>
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              size="small"
+                              startIcon={<CloudUpload />}
+                              sx={{ mt: 1, borderRadius: 2, fontWeight: 'bold', textTransform: 'none' }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                fileInputRef.current?.click();
+                              }}
+                            >
+                              Escolher do Computador
+                            </Button>
+                          </Box>
+                        )}
+                      </Box>
+                    )}
+
+                    {/* MODO 2: Galeria Visual de Computação */}
+                    {modoImagemTab === 1 && (
+                      <Box>
+                        {/* Filtro de Categorias */}
+                        <Box sx={{ display: 'flex', gap: 0.8, flexWrap: 'wrap', mb: 2 }}>
+                          {['Todas', 'Hardware', 'IA & Dados', 'Redes', 'Segurança', 'Programação'].map((cat) => (
+                            <Chip
+                              key={cat}
+                              label={cat}
+                              size="small"
+                              clickable
+                              color={categoriaGaleria === cat ? 'secondary' : 'default'}
+                              variant={categoriaGaleria === cat ? 'filled' : 'outlined'}
+                              onClick={() => setCategoriaGaleria(cat)}
+                              sx={{ fontWeight: 'bold', fontSize: '0.75rem' }}
+                            />
+                          ))}
+                        </Box>
+
+                        {/* Grid de Imagens da Galeria */}
+                        <Grid container spacing={1.5}>
+                          {SUGESTOES_IMAGENS.filter(
+                            (sug) => categoriaGaleria === 'Todas' || sug.categoria === categoriaGaleria
+                          ).map((sug, idx) => {
+                            const isSelected = imagemUrl === sug.url;
+                            return (
+                              <Grid size={{ xs: 6, sm: 4 }} key={idx}>
+                                <Box
+                                  onClick={() => setImagemUrl(sug.url)}
+                                  sx={{
+                                    borderRadius: 2,
+                                    overflow: 'hidden',
+                                    cursor: 'pointer',
+                                    border: '2px solid',
+                                    borderColor: isSelected ? 'secondary.main' : 'rgba(255, 255, 255, 0.08)',
+                                    position: 'relative',
+                                    transition: 'all 0.2s ease',
+                                    '&:hover': {
+                                      transform: 'scale(1.03)',
+                                      borderColor: 'secondary.light',
+                                      boxShadow: '0 6px 16px rgba(139, 92, 246, 0.3)'
+                                    }
+                                  }}
+                                >
+                                  <Box
+                                    component="img"
+                                    src={sug.url}
+                                    alt={sug.nome}
+                                    sx={{
+                                      width: '100%',
+                                      height: '80px',
+                                      objectFit: 'cover',
+                                      display: 'block'
+                                    }}
+                                  />
+                                  <Box
+                                    sx={{
+                                      p: 0.8,
+                                      backgroundColor: isSelected ? 'rgba(139, 92, 246, 0.35)' : 'rgba(15, 23, 42, 0.85)',
+                                      textAlign: 'center'
+                                    }}
+                                  >
+                                    <Typography
+                                      variant="caption"
+                                      sx={{
+                                        fontWeight: 600,
+                                        fontSize: '0.75rem',
+                                        display: 'block',
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis'
+                                      }}
+                                    >
+                                      {isSelected ? '✓ ' : ''}{sug.nome}
+                                    </Typography>
+                                  </Box>
+                                </Box>
+                              </Grid>
+                            );
+                          })}
+                        </Grid>
+                      </Box>
+                    )}
+
+                    {/* MODO 3: URL Direta da Web */}
+                    {modoImagemTab === 2 && (
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                        <TextField
+                          label="URL da Imagem na Internet"
+                          placeholder="https://exemplo.com/foto-hardware.jpg"
+                          value={imagemUrl.startsWith('data:') ? '' : imagemUrl}
+                          onChange={(e) => setImagemUrl(e.target.value)}
+                          fullWidth
+                          size="small"
+                          slotProps={{
+                            input: {
+                              startAdornment: <LinkIcon color="action" sx={{ mr: 1, fontSize: 18 }} />
+                            }
+                          }}
+                        />
+                        <Typography variant="caption" color="text.secondary">
+                          Dica: Cole links diretos de imagens com extensão <code>.jpg</code>, <code>.png</code> ou do <code>Unsplash</code>.
+                        </Typography>
+                      </Box>
+                    )}
                   </Box>
 
                 </Box>
