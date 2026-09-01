@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { getAulaById } from '../services/mockData';
 import type { AulaData } from '../services/mockData';
+import BalaoTexto from '../components/BalaoTexto';
 import {
   Container,
   Box,
@@ -14,7 +15,7 @@ import {
   LinearProgress,
   Tooltip
 } from '@mui/material';
-import { ArrowBack, ArrowForward, Home, Fullscreen, CheckCircle, Cancel } from '@mui/icons-material';
+import { ArrowBack, ArrowForward, Home, Fullscreen, CheckCircle, Cancel, Edit } from '@mui/icons-material';
 
 const Apresentacao: React.FC = () => {
   const { aulaId } = useParams<{ aulaId: string }>();
@@ -147,6 +148,7 @@ const Apresentacao: React.FC = () => {
           right: 20,
           display: 'flex',
           justifyContent: 'space-between',
+          alignItems: 'center',
           zIndex: 10
         }}
       >
@@ -167,18 +169,58 @@ const Apresentacao: React.FC = () => {
           EduComp Apresentação — {aula.titulo}
         </Typography>
 
-        <Tooltip title="Tela Cheia">
-          <IconButton
-            onClick={handleToggleFullscreen}
-            sx={{
-              backgroundColor: 'rgba(15, 23, 42, 0.6)',
-              backdropFilter: 'blur(8px)',
-              '&:hover': { backgroundColor: 'rgba(15, 23, 42, 0.9)' }
-            }}
-          >
-            <Fullscreen color="primary" />
-          </IconButton>
-        </Tooltip>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          {!quizIniciado && slides[slideAtual] ? (
+            <Tooltip title="Editar este slide no Editor">
+              <Button
+                variant="outlined"
+                color="primary"
+                size="small"
+                startIcon={<Edit />}
+                onClick={() => navigate(`/aula/${aula.id}/slide/${slides[slideAtual].id}/editar`)}
+                sx={{
+                  backgroundColor: 'rgba(15, 23, 42, 0.7)',
+                  backdropFilter: 'blur(8px)',
+                  fontWeight: 'bold',
+                  borderColor: 'primary.main'
+                }}
+              >
+                Editar Slide
+              </Button>
+            </Tooltip>
+          ) : (
+            <Tooltip title="Editar Quiz da Aula">
+              <Button
+                variant="outlined"
+                color="secondary"
+                size="small"
+                startIcon={<Edit />}
+                onClick={() => navigate(`/aula/${aula.id}/quiz/editar`)}
+                sx={{
+                  backgroundColor: 'rgba(15, 23, 42, 0.7)',
+                  backdropFilter: 'blur(8px)',
+                  fontWeight: 'bold',
+                  borderColor: 'secondary.main'
+                }}
+              >
+                Editar Quiz
+              </Button>
+            </Tooltip>
+          )}
+
+          <Tooltip title="Tela Cheia">
+            <IconButton
+              onClick={handleToggleFullscreen}
+              sx={{
+                backgroundColor: 'rgba(15, 23, 42, 0.6)',
+                backdropFilter: 'blur(8px)',
+                '&:hover': { backgroundColor: 'rgba(15, 23, 42, 0.9)' }
+              }}
+            >
+              <Fullscreen color="primary" />
+            </IconButton>
+          </Tooltip>
+        </Box>
       </Box>
 
       {/* Main Slide/Quiz Area */}
@@ -209,6 +251,11 @@ const Apresentacao: React.FC = () => {
                     >
                       {slides[slideAtual].conteudo}
                     </Typography>
+
+                    {/* Renderização do Balão de Texto */}
+                    {slides[slideAtual].balaoTexto && (
+                      <BalaoTexto texto={slides[slideAtual].balaoTexto} tamanho="large" animar={true} />
+                    )}
                   </Box>
                 </Grid>
 

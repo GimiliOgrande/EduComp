@@ -23,6 +23,9 @@ public class Slide {
     @Column(name = "imagem_url", length = 512)
     private String imagemUrl;
 
+    @Column(name = "balao_texto", columnDefinition = "TEXT")
+    private String balaoTexto;
+
     @Column(nullable = false)
     private Integer ordem;
 
@@ -50,12 +53,13 @@ public class Slide {
 
     public Slide() {}
 
-    public Slide(Long id, Aula aula, String titulo, String conteudo, String imagemUrl, Integer ordem, String objetivo, Integer tempoEstimado, String sugestaoExplicacao, String perguntasSugeridas, String curiosidades, String errosComuns, String materiaisComplementares) {
+    public Slide(Long id, Aula aula, String titulo, String conteudo, String imagemUrl, String balaoTexto, Integer ordem, String objetivo, Integer tempoEstimado, String sugestaoExplicacao, String perguntasSugeridas, String curiosidades, String errosComuns, String materiaisComplementares) {
         this.id = id;
         this.aula = aula;
         this.titulo = titulo;
         this.conteudo = conteudo;
         this.imagemUrl = imagemUrl;
+        this.balaoTexto = balaoTexto;
         this.ordem = ordem;
         this.objetivo = objetivo;
         this.tempoEstimado = tempoEstimado;
@@ -104,6 +108,14 @@ public class Slide {
 
     public void setImagemUrl(String imagemUrl) {
         this.imagemUrl = imagemUrl;
+    }
+
+    public String getBalaoTexto() {
+        return balaoTexto;
+    }
+
+    public void setBalaoTexto(String balaoTexto) {
+        this.balaoTexto = balaoTexto;
     }
 
     public Integer getOrdem() {
@@ -181,6 +193,7 @@ public class Slide {
         private String titulo;
         private String conteudo;
         private String imagemUrl;
+        private String balaoTexto;
         private Integer ordem;
         private String objetivo;
         private Integer tempoEstimado;
@@ -195,6 +208,7 @@ public class Slide {
         public SlideBuilder titulo(String titulo) { this.titulo = titulo; return this; }
         public SlideBuilder conteudo(String conteudo) { this.conteudo = conteudo; return this; }
         public SlideBuilder imagemUrl(String imagemUrl) { this.imagemUrl = imagemUrl; return this; }
+        public SlideBuilder balaoTexto(String balaoTexto) { this.balaoTexto = balaoTexto; return this; }
         public SlideBuilder ordem(Integer ordem) { this.ordem = ordem; return this; }
         public SlideBuilder objetivo(String objetivo) { this.objetivo = objetivo; return this; }
         public SlideBuilder tempoEstimado(Integer tempoEstimado) { this.tempoEstimado = tempoEstimado; return this; }
@@ -205,7 +219,7 @@ public class Slide {
         public SlideBuilder materiaisComplementares(String materiaisComplementares) { this.materiaisComplementares = materiaisComplementares; return this; }
 
         public Slide build() {
-            return new Slide(id, aula, titulo, conteudo, imagemUrl, ordem, objetivo, tempoEstimado, sugestaoExplicacao, perguntasSugeridas, curiosidades, errosComuns, materiaisComplementares);
+            return new Slide(id, aula, titulo, conteudo, imagemUrl, balaoTexto, ordem, objetivo, tempoEstimado, sugestaoExplicacao, perguntasSugeridas, curiosidades, errosComuns, materiaisComplementares);
         }
     }
 }

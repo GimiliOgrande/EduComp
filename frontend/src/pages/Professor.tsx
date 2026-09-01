@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { getAulaById } from '../services/mockData';
 import type { AulaData } from '../services/mockData';
+import BalaoTexto from '../components/BalaoTexto';
 import {
   Container,
   Box,
@@ -13,7 +14,8 @@ import {
   Divider,
   Chip,
   IconButton,
-  LinearProgress
+  LinearProgress,
+  Tooltip
 } from '@mui/material';
 import {
   ArrowBack,
@@ -26,7 +28,9 @@ import {
   BugReport,
   School,
   LibraryBooks,
-  PlayCircleOutlined
+  PlayCircleOutlined,
+  Edit,
+  Quiz as QuizIcon
 } from '@mui/icons-material';
 
 const Professor: React.FC = () => {
@@ -114,7 +118,7 @@ const Professor: React.FC = () => {
       {/* Top Navbar */}
       <Box sx={{ borderBottom: '1px solid', borderColor: 'divider', py: 2, mb: 4 }} className="glass-panel">
         <Container maxWidth="lg">
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
               <IconButton onClick={() => navigate('/')} color="primary" size="small">
                 <Home />
@@ -123,13 +127,36 @@ const Professor: React.FC = () => {
                 Modo Professor — {aula.titulo}
               </Typography>
             </Box>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              {aula.competencias?.map((comp, idx) => (
-                <Chip key={idx} label={comp} color="primary" variant="outlined" size="small" />
+
+            {/* Competências e Ações de Edição Rápidas */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+              {aula.competencias?.slice(0, 2).map((comp, idx) => (
+                <Chip key={idx} label={comp} color="primary" variant="outlined" size="small" sx={{ display: { xs: 'none', md: 'inline-flex' } }} />
               ))}
-              {aula.habilidades?.map((hab, idx) => (
-                <Chip key={idx} label={hab} color="secondary" variant="outlined" size="small" />
-              ))}
+
+              {slide && (
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  size="small"
+                  startIcon={<Edit />}
+                  onClick={() => navigate(`/aula/${aula.id}/slide/${slide.id}/editar`)}
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  Editar Slide
+                </Button>
+              )}
+
+              <Button
+                variant="outlined"
+                color="secondary"
+                size="small"
+                startIcon={<QuizIcon />}
+                onClick={() => navigate(`/aula/${aula.id}/quiz/editar`)}
+                sx={{ fontWeight: 'bold' }}
+              >
+                Editar Quiz
+              </Button>
             </Box>
           </Box>
         </Container>
@@ -186,17 +213,30 @@ const Professor: React.FC = () => {
 
               {/* Miniatura Visão Geral do Slide */}
               <Paper sx={{ p: 3, borderRadius: 3, border: '1px solid', borderColor: 'divider', minHeight: '300px', display: 'flex', flexDirection: 'column' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                   <Typography variant="caption" color="secondary.light" sx={{ fontWeight: 'bold' }}>
                     VISÃO DO ALUNO (SLIDE {slideAtual + 1}/{totalSlides})
                   </Typography>
-                  <Button
-                    size="small"
-                    startIcon={<PlayCircleOutlined />}
-                    onClick={() => navigate(`/aula/${aula.id}`)}
-                  >
-                    Projetar
-                  </Button>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    {slide && (
+                      <Tooltip title="Editar este slide no editor">
+                        <IconButton
+                          size="small"
+                          color="primary"
+                          onClick={() => navigate(`/aula/${aula.id}/slide/${slide.id}/editar`)}
+                        >
+                          <Edit fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    <Button
+                      size="small"
+                      startIcon={<PlayCircleOutlined />}
+                      onClick={() => navigate(`/aula/${aula.id}`)}
+                    >
+                      Projetar
+                    </Button>
+                  </Box>
                 </Box>
                 
                 {slide ? (
@@ -207,6 +247,12 @@ const Professor: React.FC = () => {
                     <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'left', lineHeight: 1.6 }}>
                       {slide.conteudo}
                     </Typography>
+
+                    {/* Balão de Texto */}
+                    {slide.balaoTexto && (
+                      <BalaoTexto texto={slide.balaoTexto} tamanho="small" animar={false} />
+                    )}
+
                     {slide.imagemUrl && (
                       <Box
                         component="img"

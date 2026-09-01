@@ -3,6 +3,7 @@ export interface SlideData {
   titulo: string;
   conteudo: string;
   imagemUrl?: string;
+  balaoTexto?: string;
   ordem: number;
   objetivo?: string;
   tempoEstimado?: number;
@@ -1302,6 +1303,8 @@ export const getAulaById = (id: number): AulaData | undefined => {
                 id: 1051,
                 titulo: "Corpo e Mente do Computador",
                 conteudo: "- **Hardware**: A parte física que você chuta (placas, cabos, carcaça).\n- **Software**: A parte lógica que você xinga quando trava (programas, sistemas, aplicativos).\nEles são interdependentes: a mente precisa do corpo para agir, e o corpo precisa da mente para ter utilidade.",
+                balaoTexto: "💡 Dica de Ouro: Pense em uma orquestra! Os instrumentos físicos são o hardware, e a partitura musical é o software.",
+                imagemUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
                 ordem: 1,
                 objetivo: "Diferenciar a infraestrutura física da lógica em dispositivos eletrônicos.",
                 tempoEstimado: 10
@@ -1310,6 +1313,8 @@ export const getAulaById = (id: number): AulaData | undefined => {
                 id: 1052,
                 titulo: "O Ciclo do Processamento",
                 conteudo: "Toda ação computacional segue três etapas obrigatórias:\n1. **Entrada**: Dados inseridos no sistema (digitação, clique, voz).\n2. **Processamento**: O cálculo realizado pelo processador (CPU).\n3. **Saída**: O resultado visualizado pelo usuário (imagem na tela, som).",
+                balaoTexto: "🤖 Robô Edu: Quando você digita algo no teclado, a CPU processa e a tela exibe o resultado em milissegundos!",
+                imagemUrl: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
                 ordem: 2,
                 objetivo: "Compreender o fluxo de informações dentro do ciclo básico de computação.",
                 tempoEstimado: 15
@@ -1321,6 +1326,8 @@ export const getAulaById = (id: number): AulaData | undefined => {
                 id: 2011,
                 titulo: "A Placa-Mãe e as Estradas de Dados",
                 conteudo: "A **Placa-Mãe** é o sistema circulatório do computador. Ela conecta fisicamente o processador, as memórias e todos os periféricos através de trilhas de cobre chamadas de **Barramentos**, que transportam pulsos elétricos.",
+                balaoTexto: "⚠️ Curiosidade: As linhas douradas desenhadas na placa-mãe são feitas de cobre e ouro para conduzir eletricidade perfeitamente!",
+                imagemUrl: "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=800&q=80",
                 ordem: 1,
                 objetivo: "Identificar a placa-mãe como o núcleo de conexões elétricas e tráfego de dados de um computador.",
                 tempoEstimado: 15
@@ -1332,6 +1339,7 @@ export const getAulaById = (id: number): AulaData | undefined => {
                 id: 2091,
                 titulo: "O que é Pensamento Computacional?",
                 conteudo: "Não é pensar como um computador, mas aprender a usar o raciocínio lógico estruturado para resolver problemas complexos das nossas vidas. Ele possui 4 pilares:\n1. **Decomposição**\n2. **Reconhecimento de Padrões**\n3. **Abstração**\n4. **Algoritmos**",
+                balaoTexto: "💡 Reflexão: Você usa Pensamento Computacional até mesmo para organizar sua rotina matinal ou preparar uma receita de bolo!",
                 ordem: 1,
                 objetivo: "Conceituar o Pensamento Computacional como ferramenta humana de resolução de problemas.",
                 tempoEstimado: 10
@@ -1340,6 +1348,7 @@ export const getAulaById = (id: number): AulaData | undefined => {
                 id: 2092,
                 titulo: "Pilar 1: Decomposição",
                 conteudo: "**Decomposição** é a arte de quebrar um grande problema em pequenas partes menores, focando em resolver uma de cada vez. Problemas menores são muito mais simples de solucionar.",
+                balaoTexto: "💬 Pergunta para a turma: Como você dividiria a tarefa de organizar uma grande feira de ciências na escola?",
                 ordem: 2,
                 objetivo: "Aplicar a técnica de decomposição na divisão de problemas complexos.",
                 tempoEstimado: 15
@@ -1351,6 +1360,8 @@ export const getAulaById = (id: number): AulaData | undefined => {
                 id: 3011,
                 titulo: "O Despertar da Inteligência Artificial",
                 conteudo: "A Inteligência Artificial (IA) busca fazer com que sistemas computacionais consigam simular comportamentos inteligentes de humanos, como aprender, raciocinar e reconhecer padrões de linguagem.",
+                balaoTexto: "🤖 Robô Edu: A IA não sente nem pensa como nós; ela é pura matemática, estatística e reconhecimento de padrões em dados!",
+                imagemUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80",
                 ordem: 1,
                 objetivo: "Introduzir a definição científica de Inteligência Artificial.",
                 tempoEstimado: 10
@@ -1359,6 +1370,7 @@ export const getAulaById = (id: number): AulaData | undefined => {
                 id: 3012,
                 titulo: "O Teste de Turing",
                 conteudo: "Proposto por Alan Turing em 1950, o teste avalia se uma máquina consegue conversar por texto com um humano sem que este perceba que está falando com um computador. Se o humano não conseguir diferenciar, a máquina passou no teste.",
+                balaoTexto: "💡 Curiosidade: Alan Turing é considerado o pai da computação e ajudou a decifrar códigos secretos na 2ª Guerra Mundial!",
                 ordem: 2,
                 objetivo: "Compreender a primeira metodologia histórica de avaliação de inteligência de máquinas.",
                 tempoEstimado: 15
@@ -1469,3 +1481,172 @@ export const getAulaById = (id: number): AulaData | undefined => {
   }
   return undefined;
 };
+
+// Funções de Persistência e Sincronização Local dos Dados Mockados
+const STORAGE_KEY = 'educomp_curso_data';
+
+export const getStoredCurso = (): CursoData => {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch (e) {
+      console.error('Erro ao ler dados do localStorage, usando dados padrão:', e);
+    }
+  }
+  return mockCurso;
+};
+
+export const saveStoredCurso = (curso: CursoData): void => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(curso));
+};
+
+export const saveSlideMock = (aulaId: number, slide: Partial<SlideData> & { id?: number }): SlideData => {
+  const curso = getStoredCurso();
+  let slideSalvo: SlideData | null = null;
+
+  for (const serie of curso.series) {
+    for (const modulo of serie.modulos) {
+      const aula = modulo.aulas.find(a => a.id === aulaId);
+      if (aula) {
+        if (!aula.slides) aula.slides = [];
+
+        if (slide.id) {
+          // Atualizar slide existente
+          const idx = aula.slides.findIndex(s => s.id === slide.id);
+          if (idx !== -1) {
+            aula.slides[idx] = { ...aula.slides[idx], ...slide } as SlideData;
+            slideSalvo = aula.slides[idx];
+          }
+        }
+        
+        if (!slideSalvo) {
+          // Criar novo slide
+          const newId = slide.id || Date.now();
+          const newOrder = slide.ordem || (aula.slides.length + 1);
+          slideSalvo = {
+            id: newId,
+            titulo: slide.titulo || 'Novo Slide',
+            conteudo: slide.conteudo || '',
+            imagemUrl: slide.imagemUrl,
+            balaoTexto: slide.balaoTexto,
+            ordem: newOrder,
+            objetivo: slide.objetivo,
+            tempoEstimado: slide.tempoEstimado || 5,
+            sugestaoExplicacao: slide.sugestaoExplicacao,
+            perguntasSugeridas: slide.perguntasSugeridas,
+            curiosidades: slide.curiosidades,
+            errosComuns: slide.errosComuns,
+            materiaisComplementares: slide.materiaisComplementares
+          };
+          aula.slides.push(slideSalvo);
+        }
+        break;
+      }
+    }
+  }
+
+  saveStoredCurso(curso);
+  return slideSalvo || (slide as SlideData);
+};
+
+export const deleteSlideMock = (aulaId: number, slideId: number): void => {
+  const curso = getStoredCurso();
+  for (const serie of curso.series) {
+    for (const modulo of serie.modulos) {
+      const aula = modulo.aulas.find(a => a.id === aulaId);
+      if (aula && aula.slides) {
+        aula.slides = aula.slides.filter(s => s.id !== slideId);
+        // Reordenar slides
+        aula.slides.forEach((s, idx) => { s.ordem = idx + 1; });
+        saveStoredCurso(curso);
+        return;
+      }
+    }
+  }
+};
+
+export const saveQuizMock = (aulaId: number, quiz: QuizData): QuizData => {
+  const curso = getStoredCurso();
+  for (const serie of curso.series) {
+    for (const modulo of serie.modulos) {
+      const aula = modulo.aulas.find(a => a.id === aulaId);
+      if (aula) {
+        aula.quiz = quiz;
+        saveStoredCurso(curso);
+        return quiz;
+      }
+    }
+  }
+  return quiz;
+};
+
+export const createAulaMock = (moduloId: number, aula: Partial<AulaData>): AulaData => {
+  const curso = getStoredCurso();
+  let novaAula: AulaData | null = null;
+
+  for (const serie of curso.series) {
+    const modulo = serie.modulos.find(m => m.id === moduloId);
+    if (modulo) {
+      const newId = Date.now();
+      const newOrder = modulo.aulas.length + 1;
+      novaAula = {
+        id: newId,
+        titulo: aula.titulo || 'Nova Aula',
+        descricao: aula.descricao || '',
+        ordem: newOrder,
+        objetivo: aula.objetivo,
+        recursosNecessarios: aula.recursosNecessarios,
+        duracaoSugerida: aula.duracaoSugerida || '50 minutos',
+        competencias: aula.competencias || ['Cultura Digital'],
+        habilidades: aula.habilidades || ['EM13LGG701'],
+        slides: [
+          {
+            id: newId * 10 + 1,
+            titulo: 'Introdução',
+            conteudo: `Bem-vindos à aula **${aula.titulo || 'Nova Aula'}**!`,
+            balaoTexto: '💡 Olá, turma! Vamos começar a nossa aula de hoje!',
+            ordem: 1,
+            tempoEstimado: 5,
+            objetivo: aula.objetivo || 'Compreender os tópicos principais.'
+          }
+        ],
+        quiz: {
+          id: newId * 100,
+          titulo: `Quiz: ${aula.titulo || 'Nova Aula'}`,
+          perguntas: [
+            {
+              id: newId * 1000 + 1,
+              enunciado: `Qual o ponto mais importante abordado na aula de ${aula.titulo || 'hoje'}?`,
+              ordem: 1,
+              alternativas: [
+                { id: newId * 10000 + 1, texto: 'Compreender os conceitos e sua aplicação na vida prática.', correta: true, ordem: 1 },
+                { id: newId * 10000 + 2, texto: 'Apenas decorar termos sem refletir.', correta: false, ordem: 2 }
+              ]
+            }
+          ]
+        }
+      };
+      modulo.aulas.push(novaAula);
+      saveStoredCurso(curso);
+      break;
+    }
+  }
+  return novaAula || (aula as AulaData);
+};
+
+export const updateAulaMock = (aulaId: number, updates: Partial<AulaData>): AulaData | null => {
+  const curso = getStoredCurso();
+  for (const serie of curso.series) {
+    for (const modulo of serie.modulos) {
+      const idx = modulo.aulas.findIndex(a => a.id === aulaId);
+      if (idx !== -1) {
+        modulo.aulas[idx] = { ...modulo.aulas[idx], ...updates };
+        saveStoredCurso(curso);
+        return modulo.aulas[idx];
+      }
+    }
+  }
+  return null;
+};
+

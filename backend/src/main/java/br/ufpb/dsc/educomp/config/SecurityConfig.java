@@ -1,6 +1,7 @@
 package br.ufpb.dsc.educomp.config;
 
 import br.ufpb.dsc.educomp.service.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +27,9 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
     private final JwtTokenProvider tokenProvider;
+
+    @Value("${educomp.cors.allowed-origins:http://localhost:5173,http://localhost:3000,http://localhost:4173,https://*.vercel.app}")
+    private String allowedOrigins;
 
     public SecurityConfig(CustomUserDetailsService userDetailsService, JwtTokenProvider tokenProvider) {
         this.userDetailsService = userDetailsService;
@@ -66,11 +70,17 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // Porta padrão do Vite
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Cache-Control"));
+        
+        List<String> originsList = Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .toList();
+
+        configuration.setAllowedOriginPatterns(originsList);
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Cache-Control", "Accept", "Origin", "X-Requested-With"));
         configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L); // Cache pre-flight options por 1 hora
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
